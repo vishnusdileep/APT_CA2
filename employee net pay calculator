@@ -13,3 +13,9 @@
             print(e)
         return file_info
         
+ def computePayment(self, hours_worked, date):
+        final_json = {'name': self.employee_name, 'Date': date,
+                      'Regular Hours Worked': hours_worked, 'Overtime Hours Worked': '',
+                      'Regular Rate': '', 'Overtime Rate': '', 'Regular Pay': '', 'Overtime Pay': '', 'Gross Pay': '',
+                      'Standard Rate Pay': '', 'Higher Rate Pay': '', 'Standard Tax': '', 'Higher Tax': '',
+                      'Total Tax': '', 'Tax Credit': '', 'Net Deductions': '', 'Net Pay': ''}
