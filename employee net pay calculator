@@ -1,0 +1,15 @@
+    def generic_file_reader(file_name):
+        """
+        Function to open and read file contents.
+        :param file_name:
+        :return: file_info
+        """
+        file_info = list()
+        try:
+            with open(file_name) as obj:
+                for each_row in obj.readlines():
+                    file_info.append(each_row.replace('\n', '').split(" "))
+        except FileNotFoundError as e:
+            print(e)
+        return file_info
+        
