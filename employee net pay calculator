@@ -13,9 +13,83 @@
             print(e)
         return file_info
         
- def computePayment(self, hours_worked, date):
-        final_json = {'name': self.employee_name, 'Date': date,
-                      'Regular Hours Worked': hours_worked, 'Overtime Hours Worked': '',
+    def computePayment(self, employee_id, date, hours_worked):
+        final_json = {'employee id': employee_id, 'name': '', 'Date': date, 'Regular Hours': '',
+                      'Hours Worked': hours_worked, 'Overtime Hours Worked': '',
                       'Regular Rate': '', 'Overtime Rate': '', 'Regular Pay': '', 'Overtime Pay': '', 'Gross Pay': '',
                       'Standard Rate Pay': '', 'Higher Rate Pay': '', 'Standard Tax': '', 'Higher Tax': '',
                       'Total Tax': '', 'Tax Credit': '', 'Net Deductions': '', 'Net Pay': ''}
+        try:
+            employee_data = self.generic_file_reader('Employee.txt')
+            if len(employee_data) != 0:
+                for employee_info in employee_data:
+                    try:
+                        if employee_id == employee_info[0]:
+                            final_json['name'] = '''{} {}'''.format(employee_info[2].lower(),
+                                                                    employee_info[1].lower())
+                            ot_multiple = float(employee_info[5])
+                            final_json['OTMultiple'] = ot_multiple
+
+                            regular_hours = float(employee_info[3])
+                            final_json['Regular Hours'] = regular_hours
+
+                            regular_rate = float(employee_info[4])
+                            final_json['Regular Rate'] = regular_rate
+
+                            over_time_hours_worked = hours_worked - regular_hours
+                            final_json['Overtime Hours Worked'] = over_time_hours_worked
+
+                            if hours_worked != 0:
+                                regular_pay = regular_rate * regular_hours
+                                final_json['Regular Pay'] = regular_pay
+
+                            over_time_rate = ot_multiple * regular_rate
+                            final_json['Overtime Rate'] = over_time_rate
+                            over_time_pay = over_time_rate * over_time_hours_worked
+                            final_json['Overtime Pay'] = over_time_pay
+
+                            gross_pay = regular_pay + over_time_pay
+                            final_json['Gross Pay'] = gross_pay
+
+                            standard_rate_pay = float(employee_info[7])
+                            final_json['Standard Rate Pay'] = standard_rate_pay
+
+                            higher_rate_pay = gross_pay - float(standard_rate_pay)
+                            final_json['Higher Rate Pay'] = higher_rate_pay
+
+                            standard_tax = float(standard_rate_pay) * .2
+                            final_json['Standard Tax'] = standard_tax
+
+                            higher_tax = float(higher_rate_pay) * .4
+                            final_json['Higher Tax'] = higher_tax
+
+                            total_tax = standard_tax + higher_tax
+                            final_json['Total Tax'] = total_tax
+
+                            final_json['Tax Credit'] = employee_info[6]
+
+                            net_deductions = total_tax - float(employee_info[6])
+                            final_json['Net Deductions'] = net_deductions
+
+                            final_json['Net Pay'] = gross_pay - net_deductions
+                    except Exception as e:
+                        print(traceback.print_exc())
+                        print(e)
+            else:
+                print("Failed to get employee info")
+        except Exception as e:
+            print(e)
+        return final_json
+
+
+if __name__ == '__main__':
+    employee_obj = Employee()
+    master_file_data = employee_obj.generic_file_reader('Hours.txt')
+    for each_employee_info in master_file_data:
+        try:
+            result = employee_obj.computePayment(employee_id=each_employee_info[0],
+                                                 date=each_employee_info[1],
+                                                 hours_worked=int(each_employee_info[2]))
+            print(result)
+        except Exception as er:
+            print(er)
