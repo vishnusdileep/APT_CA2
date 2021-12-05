@@ -1,3 +1,6 @@
+    class Employee:
+
+    @staticmethod
     def generic_file_reader(file_name):
         """
         Function to open and read file contents.
@@ -39,11 +42,15 @@
                             over_time_hours_worked = hours_worked - regular_hours
                             final_json['Overtime Hours Worked'] = over_time_hours_worked
 
-                            if hours_worked != 0:
+                            if hours_worked != 0:  # and (regular_hours <= hours_worked)
                                 regular_pay = regular_rate * regular_hours
                                 final_json['Regular Pay'] = regular_pay
+                            if over_time_hours_worked < 0:
+                                over_time_hours_worked = 0
+                            final_json['Overtime Hours Worked'] = over_time_hours_worked
 
                             over_time_rate = ot_multiple * regular_rate
+
                             final_json['Overtime Rate'] = over_time_rate
                             over_time_pay = over_time_rate * over_time_hours_worked
                             final_json['Overtime Pay'] = over_time_pay
@@ -54,8 +61,12 @@
                             standard_rate_pay = float(employee_info[7])
                             final_json['Standard Rate Pay'] = standard_rate_pay
 
-                            higher_rate_pay = gross_pay - float(standard_rate_pay)
-                            final_json['Higher Rate Pay'] = higher_rate_pay
+                            if gross_pay >= standard_rate_pay:
+                                higher_rate_pay = gross_pay - float(standard_rate_pay)
+                                final_json['Higher Rate Pay'] = higher_rate_pay
+                            else:
+                                higher_rate_pay = 0
+                                final_json['Higher Rate Pay'] = higher_rate_pay
 
                             standard_tax = float(standard_rate_pay) * .2
                             final_json['Standard Tax'] = standard_tax
