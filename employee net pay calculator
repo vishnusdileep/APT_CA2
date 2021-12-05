@@ -22,12 +22,15 @@
                       'Regular Rate': '', 'Overtime Rate': '', 'Regular Pay': '', 'Overtime Pay': '', 'Gross Pay': '',
                       'Standard Rate Pay': '', 'Higher Rate Pay': '', 'Standard Tax': '', 'Higher Tax': '',
                       'Total Tax': '', 'Tax Credit': '', 'Net Deductions': '', 'Net Pay': ''}
-        try:
+        try:                                                                            # try function to get exceptions get details in case any error
             employee_data = self.generic_file_reader('Employee.txt')
             if len(employee_data) != 0:
                 for employee_info in employee_data:
                     try:
-                        if employee_id == employee_info[0]:
+                        if employee_id == employee_info[0]:                                     # checking the employee id from both files
+                        
+                         # calculations and assigning values to dictionary keys
+                        
                             final_json['name'] = '''{} {}'''.format(employee_info[2].lower(),
                                                                     employee_info[1].lower())
                             ot_multiple = float(employee_info[5])
@@ -41,6 +44,8 @@
 
                             over_time_hours_worked = hours_worked - regular_hours
                             final_json['Overtime Hours Worked'] = over_time_hours_worked
+                            
+# eliminate issues with Regular Hours exceeding hours worked and overtime being negative
 
                             if hours_worked != 0:  # and (regular_hours <= hours_worked)
                                 regular_pay = regular_rate * regular_hours
